@@ -1,0 +1,34 @@
+name: Network traffic generator
+version: "0.1.0"
+author: Deferme Lowie <lowie.deferme@student.uhasselt.com>
+about: Generates network traffic
+args:
+  - ADDRESS:
+      required: true
+      index: 1
+      help: The destination address (ip or url)
+  - PORT:
+      required: true
+      index: 2
+      help: The destination port
+  - packet-count:
+      short: c
+      long: packet-count
+      takes_value: true
+      value_name: COUNT
+      help: Amount of packets to send
+  - protocol:
+      short: p
+      long: protocol
+      takes_value: true
+      value_name: PROTOCOL
+      help: 'Protocol to use: TCP, UDP'
+  - data:
+      short: d
+      long: data
+      takes_value: true
+      value_name: PATH
+      help: Path to the payload data in hexdump format
+  - verbose:
+      short: v
+      help: Set verbose
