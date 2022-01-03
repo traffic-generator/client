@@ -1,16 +1,18 @@
 use clap::{load_yaml, App};
+use std::str::FromStr;
 
+mod generator;
 mod hex;
 
 fn main() {
-    // Define cli arguments
+    /****************** Define cli arguments ******************/
     let yaml = load_yaml!("../resources/cli.yml");
     let matches = App::from_yaml(yaml).get_matches();
 
-    // Check verbosity
+    // set verbosity
     let verbose: bool = matches.is_present("verbose");
 
-    // Read data from hex file if necessary
+    /********************** Load hex data *********************/
     let default_data: Vec<u8> = vec![
         0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, // hello world
     ];
@@ -27,7 +29,43 @@ fn main() {
     }
 
     // DEBUG: print data
-    println!("data: {:x?}", data);
+    if verbose {
+        println!("Loaded data: {:x?}", data);
+    }
 
-    // TODO: generate traffic
+    /********************* Setup generator ********************/
+
+    // Read cli arguments
+    let dest_address = matches.value_of("ADDRESS").unwrap().to_string();
+    let dest_port = matches
+        .value_of("PORT")
+        .unwrap()
+        .parse::<u16>()
+        .expect("Invallid port number");
+    let local_address: Option<String> = None; // TODO: get local address from arguments
+    let local_port: Option<u16> = None; // TODO: get local port from arguments
+    let protocol = generator::Protocol::from_str(matches.value_of("protocol").unwrap_or("tcp"))
+        .expect("Invallid protocol name");
+    let interface: Option<String> = None; // TODO: get interface from arguments
+
+    // Create generator
+    let gen = generator::create_generator(
+        dest_address,
+        dest_port,
+        local_address,
+        local_port,
+        protocol,
+        interface,
+    );
+
+    /******************** Generate traffic ********************/
+    // Get packet count
+    let packet_count: i32 = matches
+        .value_of("packet-count")
+        .unwrap_or("1")
+        .parse()
+        .expect("No valid packet count");
+
+    // Start generator
+    gen.start(data, packet_count);
 }

@@ -9,3 +9,5 @@ edition = "2021"
 clap = {version = "~2.27.0", features = ["yaml"]}
 regex = "1.5.4"
 socket2 = "0.4.2"
+strum = "0.23"
+strum_macros = "0.23"

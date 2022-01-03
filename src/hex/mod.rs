@@ -1,11 +1,13 @@
 use regex::Regex;
-use std::error::Error;
 use std::{fmt, fs, num::ParseIntError, path::Path};
 
 /// Read a file in hexdump format and return a byte vector
 pub fn read_from_file(file_name: &str) -> Result<Vec<u8>, DecodeHexError> {
     let file_path = Path::new(file_name);
-    let file_content = fs::read_to_string(file_path).expect("Could not read file:");
+    let file_content = match fs::read_to_string(file_path) {
+        Ok(content) => content,
+        Err(_e) => return Err(DecodeHexError::IOError),
+    };
 
     let re = Regex::new(
         r"(?ixm)
@@ -61,6 +63,7 @@ fn decode_hex(s: &str) -> Result<Vec<u8>, DecodeHexError> {
 pub enum DecodeHexError {
     OddLength,
     InvalidAddress,
+    IOError,
     ParseInt(ParseIntError),
 }
 
@@ -75,6 +78,7 @@ impl fmt::Display for DecodeHexError {
         match self {
             DecodeHexError::OddLength => "input string has an odd number of bytes".fmt(f),
             DecodeHexError::InvalidAddress => "address is not a valid number".fmt(f),
+            DecodeHexError::IOError => "file could not be read".fmt(f),
             DecodeHexError::ParseInt(e) => e.fmt(f),
         }
     }
