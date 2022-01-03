@@ -42,11 +42,20 @@ fn main() {
         .unwrap()
         .parse::<u16>()
         .expect("Invallid port number");
-    let local_address: Option<String> = None; // TODO: get local address from arguments
-    let local_port: Option<u16> = None; // TODO: get local port from arguments
+    let local_address: Option<String> = match matches.value_of("local-address") {
+        Some(a) => Some(a.to_string()),
+        None => None,
+    };
+    let local_port: Option<u16> = match matches.value_of("local-port") {
+        Some(p) => Some(p.parse::<u16>().expect("Invallid port number")),
+        None => None,
+    };
     let protocol = generator::Protocol::from_str(matches.value_of("protocol").unwrap_or("tcp"))
         .expect("Invallid protocol name");
-    let interface: Option<String> = None; // TODO: get interface from arguments
+    let interface: Option<String> = match matches.value_of("interface") {
+        Some(i) => Some(i.to_string()),
+        None => None,
+    };
 
     // Create generator
     let gen = generator::create_generator(

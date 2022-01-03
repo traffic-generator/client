@@ -1,5 +1,5 @@
 use std::net::SocketAddr;
-use strum_macros::{EnumString, ToString};
+use strum_macros::{Display, EnumString};
 
 // Protocol specific modules
 mod raw;
@@ -7,7 +7,7 @@ mod tcp;
 mod udp;
 
 /// Enum to define the protocol
-#[derive(EnumString, ToString)]
+#[derive(EnumString, Display)]
 #[strum(ascii_case_insensitive)]
 pub enum Protocol {
     Tcp,
