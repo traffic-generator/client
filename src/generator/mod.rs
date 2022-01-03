@@ -1,4 +1,5 @@
-use strum_macros::EnumString;
+use std::net::SocketAddr;
+use strum_macros::{EnumString, ToString};
 
 // Protocol specific modules
 mod raw;
@@ -6,7 +7,7 @@ mod tcp;
 mod udp;
 
 /// Enum to define the protocol
-#[derive(EnumString)]
+#[derive(EnumString, ToString)]
 #[strum(ascii_case_insensitive)]
 pub enum Protocol {
     Tcp,
@@ -16,7 +17,16 @@ pub enum Protocol {
 
 /// Generate trait
 pub trait Generator {
+    /// Start the generator
     fn start(&self, data: Vec<u8>, packet_count: i32);
+    /// Get the destination address
+    fn get_destination_addr(&self) -> SocketAddr;
+    /// Get the local address if specified
+    fn get_local_addr(&self) -> SocketAddr;
+    /// Get protocol of generator
+    fn get_protocol(&self) -> Protocol;
+    /// Get interface if Specified
+    fn get_interface(&self) -> Option<String>;
 }
 
 pub fn create_generator(

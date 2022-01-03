@@ -1,4 +1,4 @@
-use crate::generator::Generator;
+use crate::generator::{Generator, Protocol};
 use socket2::Socket;
 use std::net::{IpAddr, SocketAddr};
 
@@ -15,6 +15,20 @@ impl Generator for RawGenerator {
     fn start(&self, data: Vec<u8>, packet_count: i32) {
         println!("[RAW] Start was called");
         //TODO
+        todo!()
+    }
+    fn get_destination_addr(&self) -> SocketAddr {
+        self.dest_address
+    }
+    fn get_local_addr(&self) -> SocketAddr {
+        self.local_address
+            .unwrap_or(SocketAddr::new("172.0.0.1".parse().unwrap(), 0))
+    }
+    fn get_protocol(&self) -> Protocol {
+        Protocol::Raw
+    }
+    fn get_interface(&self) -> Option<String> {
+        self.interface.clone()
     }
 }
 

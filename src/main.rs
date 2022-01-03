@@ -58,6 +58,20 @@ fn main() {
         interface,
     );
 
+    if verbose {
+        print!(
+            "Generator:\n\
+            \tDestination address: {}\n\
+            \tLocal address: {}\n\
+            \tProtocol: {}\n\
+            \tInterface: {}\n",
+            gen.get_destination_addr(),
+            gen.get_local_addr(),
+            gen.get_protocol().to_string(),
+            gen.get_interface().unwrap_or("undef".to_string())
+        );
+    }
+
     /******************** Generate traffic ********************/
     // Get packet count
     let packet_count: i32 = matches
