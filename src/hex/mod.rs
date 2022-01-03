@@ -19,7 +19,7 @@ pub fn read_from_file(file_name: &str) -> Result<Vec<u8>, DecodeHexError> {
         ",
     )
     .unwrap();
-    let caps = re.captures_iter(&file_content); // TODO: error handling
+    let caps = re.captures_iter(&file_content);
     let mut data: Vec<u8> = Vec::new();
     for cap in caps {
         let mut cap_data = string_to_bytes(&cap["data"]);

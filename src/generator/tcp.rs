@@ -1,5 +1,5 @@
-use crate::generator::{Generator, Protocol};
-use socket2::Socket;
+use crate::generator::{Generator, GeneratorError, Protocol};
+use socket2::{Domain, Socket, Type};
 use std::net::{IpAddr, SocketAddr};
 
 /// Struct to hold generator properties
@@ -12,10 +12,33 @@ pub struct TcpGenerator {
 /// Implement generate trait
 impl Generator for TcpGenerator {
     /// Start the TcpGenerator
-    fn start(&self, data: Vec<u8>, packet_count: i32) {
-        println!("[TCP] Start was called");
-        //TODO: Start sending tcp traffic
-        todo!()
+    fn start(&self, data: Vec<u8>, packet_count: i32) -> Result<(), GeneratorError> {
+        // Create socket
+        let sock: Socket =
+            match Socket::new(Domain::for_address(self.dest_address), Type::STREAM, None) {
+                Ok(s) => s,
+                Err(_e) => return Err(GeneratorError::SocketCreationError),
+            };
+        // Connect to destination
+        match sock.connect(&self.dest_address.into()) {
+            Ok(__) => {}
+            Err(_e) => return Err(GeneratorError::ConnectionError),
+        }
+        // Disable Nagle's algorithm
+        // SOURCE: https://doi.org/10.1145/382176.382177
+        match sock.set_nodelay(true) {
+            Ok(__) => {}
+            Err(_e) => return Err(GeneratorError::SetSocketOptionError("nodelay".to_string())),
+        }
+        // Send data
+        for _x in 0..packet_count {
+            let bytes_send = match sock.send(&data) {
+                Ok(b) => b,
+                Err(_e) => return Err(GeneratorError::SendError),
+            };
+            println!("[TCP] send {} bytes", bytes_send);
+        }
+        Ok(())
     }
     fn get_destination_addr(&self) -> SocketAddr {
         self.dest_address

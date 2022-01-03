@@ -1,3 +1,4 @@
+use std::fmt;
 use std::net::SocketAddr;
 use strum_macros::{Display, EnumString};
 
@@ -18,7 +19,7 @@ pub enum Protocol {
 /// Generate trait
 pub trait Generator {
     /// Start the generator
-    fn start(&self, data: Vec<u8>, packet_count: i32);
+    fn start(&self, data: Vec<u8>, packet_count: i32) -> Result<(), GeneratorError>;
     /// Get the destination address
     fn get_destination_addr(&self) -> SocketAddr;
     /// Get the local address if specified
@@ -37,7 +38,7 @@ pub fn create_generator(
     protocol: Protocol,
     interface: Option<String>,
 ) -> Box<dyn Generator> {
-    let gen = match protocol {
+    match protocol {
         Protocol::Raw => {
             // return RawGenerator
             return Box::new(raw::RawGenerator::new(
@@ -71,49 +72,25 @@ pub fn create_generator(
     };
 }
 
-/*
-/// Struct to hold generator properties
-pub struct Generator {
-    dest_address: SocketAddr,
-    protocol: Protocol,
-    local_address: Option<SocketAddr>,
-    interface: Option<String>,
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum GeneratorError {
+    SocketCreationError,
+    ConnectionError,
+    SetSocketOptionError(String),
+    SendError,
 }
 
-impl Generator {
-    /// Constructor: create new generator
-    pub fn new(
-        destination_address: String,
-        destination_port: u16,
-        protocol: Protocol,
-        local_address: Option<String>,
-        local_port: Option<u16>,
-        interface: Option<String>,
-    ) -> Generator {
-        // Fill new generator struct
-        Generator {
-            dest_address: SocketAddr::new(
-                destination_address.parse::<IpAddr>().unwrap(),
-                destination_port,
-            ),
-            local_address: match local_address {
-                Some(address) => match local_port {
-                    Some(port) => Some(SocketAddr::new(address.parse::<IpAddr>().unwrap(), port)),
-                    None => Some(SocketAddr::new(address.parse::<IpAddr>().unwrap(), 0)),
-                },
-                None => None,
-            },
-            protocol: protocol,
-            interface: interface,
-        }
-    }
-
-    pub fn start(&self, data: Vec<u8>, packet_count: i32) {
-        match self.protocol {
-            Protocol::Raw => raw::start(), // TODO: implement raw generator
-            Protocol::Tcp => tcp::start(), // TODO: implement tcp generator
-            Protocol::Udp => udp::start(), // TODO: implement udp generator
+impl fmt::Display for GeneratorError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            GeneratorError::SocketCreationError => "could not create socket".fmt(f),
+            GeneratorError::ConnectionError => "could not connect to destination".fmt(f),
+            GeneratorError::SetSocketOptionError(option) => {
+                format!("could not set socket option: {}", option).fmt(f)
+            }
+            GeneratorError::SendError => "could not send data to socket".fmt(f),
         }
     }
 }
-*/
+
+impl std::error::Error for GeneratorError {}

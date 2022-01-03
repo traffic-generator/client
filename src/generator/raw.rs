@@ -1,4 +1,4 @@
-use crate::generator::{Generator, Protocol};
+use crate::generator::{Generator, GeneratorError, Protocol};
 use socket2::Socket;
 use std::net::{IpAddr, SocketAddr};
 
@@ -12,9 +12,9 @@ pub struct RawGenerator {
 /// Implement generate trait
 impl Generator for RawGenerator {
     /// Start the RawGenerator
-    fn start(&self, data: Vec<u8>, packet_count: i32) {
+    fn start(&self, data: Vec<u8>, packet_count: i32) -> Result<(), GeneratorError> {
         println!("[RAW] Start was called");
-        //TODO
+        //TODO: Start sendin raw traffic
         todo!()
     }
     fn get_destination_addr(&self) -> SocketAddr {
