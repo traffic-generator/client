@@ -20,5 +20,7 @@
 # Workspace
 *.code-workspace
 
-# Workspace settigs folder
-/vscode/
+# Workspace settings folder
+.vscode/**
+!.vscode/extensions.json
+!.vscode/settings.json
