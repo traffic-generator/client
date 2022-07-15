@@ -1,6 +1,7 @@
 use chrono::Utc;
 use std::{
     fs::File,
+    io::Write,
     path::{Path, PathBuf},
 };
 
@@ -29,7 +30,7 @@ impl Logger {
                         "Could not create log file \"{}\"",
                         file_path.display()
                     ));
-                    self.warning("Skip logging to file".to_string());
+                    self.warn("Skip logging to file".to_string());
                     return; // Exit and skip logging to file
                 }
             }
@@ -44,8 +45,14 @@ impl Logger {
         self.log(&info_msg);
     }
 
-    /// Log an error message
-    pub fn warning(&self, msg: String) {
+    /// Log current time
+    pub fn time(&self) {
+        let time_msg = format!("[TIME] {}", Utc::now());
+        self.log(&time_msg);
+    }
+
+    /// Log a warning message
+    pub fn warn(&self, msg: String) {
         let warning_msg = format!("[WARNING] {}", msg);
         self.log(&warning_msg);
     }
@@ -61,6 +68,19 @@ impl Logger {
         if self.log_to_stdout {
             println!("{}", msg);
         }
-        if self.log_to_file {}
+        if self.log_to_file {
+            match File::options()
+                .append(true)
+                .open(self.log_file_path.as_ref().unwrap().as_path())
+            {
+                Ok(mut log_file) => writeln!(log_file, "{}", msg).unwrap(),
+                Err(_) => {
+                    self.warn(format!(
+                        "Could not log to file, failed to open \"{}\"",
+                        self.log_file_path.as_ref().unwrap().display()
+                    ));
+                }
+            }
+        }
     }
 }
