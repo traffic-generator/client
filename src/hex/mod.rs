@@ -2,8 +2,7 @@ use regex::Regex;
 use std::{fmt, fs, num::ParseIntError, path::Path};
 
 /// Read a file in hexdump format and return a byte vector
-pub fn read_from_file(file_name: &str) -> Result<Vec<u8>, DecodeHexError> {
-    let file_path = Path::new(file_name);
+pub fn read_from_file(file_path: &Path) -> Result<Vec<u8>, DecodeHexError> {
     let file_content = match fs::read_to_string(file_path) {
         Ok(content) => content,
         Err(_e) => return Err(DecodeHexError::IOError),
