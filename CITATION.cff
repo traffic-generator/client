@@ -1,11 +1,9 @@
-# This CITATION.cff file was generated with cffinit.
-# Visit https://bit.ly/cffinit to generate yours today!
-
 cff-version: 1.2.0
-title: Traffic generator
 message: Please cite this software using these metadata.
 type: software
+title: Traffic generator client
+version: 1.0.0
+url: "https://github.com/defermelowie/traffic-generator-client"
 authors:
   - given-names: Lowie
     family-names: Deferme
-    email: lowie.deferme@student.uhasselt.be
