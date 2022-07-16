@@ -1,10 +1,10 @@
+mod generator;
 mod log;
-mod proto;
 
 use std::path::Path;
 
+use generator::{udp::UdpPacket, Packet};
 use log::Logger;
-use proto::{udp::UdpPacket, Packet};
 
 const DEFAULT_PAYLOAD: &str = "hello world";
 

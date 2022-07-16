@@ -1,6 +1,6 @@
 # Network Traffic Generator Client
 
-*A simple network traffic generator written in rust*
+A simple network traffic generator written in rust
 
 ## Architecture
 
