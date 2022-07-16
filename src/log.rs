@@ -45,6 +45,12 @@ impl Logger {
         self.log(&info_msg);
     }
 
+    /// Log a debug message
+    pub fn debug(&self, msg: String) {
+        let debug_msg = format!("[DEBUG] {}", msg);
+        self.log(&debug_msg);
+    }
+
     /// Log current time
     pub fn time(&self) {
         let time_msg = format!("[TIME] {}", Utc::now());

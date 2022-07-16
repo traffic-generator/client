@@ -1,5 +1,5 @@
-// Note: interesting generators
-// * Raw --> Send  raw byte vector as can b obtained by proto
+// Note: interesting senders
+// * Raw --> Send any raw byte vector as can be obtained by a generator
 // * Udp
 // * Tcp
 // * QUIC
