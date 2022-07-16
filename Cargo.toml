@@ -1,12 +1,13 @@
 [package]
-name = "client"
+name = "traffic-generator-client"
 version = "0.1.0"
 edition = "2021"
+readme = "README.md"
+license-file = "LICENSE"
+keywords = ["network-traffic-generation", "udp", "quic"]
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = "~2.27.0"
-regex = "1.5.4"
 socket2 = "0.4.2"
-chrono = "0.4.19"

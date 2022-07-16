@@ -1,7 +1,5 @@
 //! Definitions for the UDP protocol (RFC 768)
 
-use chrono::ParseResult;
-
 use super::Packet;
 
 /// Holds an UDP packet
